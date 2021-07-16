@@ -46,3 +46,31 @@ const getForecast = async () => {
     }
 }  
 
+// Render functions
+const renderVenues = (venues) => {
+    $venueDivs.forEach(($venue, index) => {
+      const venue = venues[index];
+      const venueIcon = venue.categories[0].icon;
+      const venueImgSrc = `${venueIcon.prefix}bg_64${venueIcon.suffix}`;
+      let venueContent = createVenueHTML(venue.name, venue.location, venueImgSrc);
+      $venue.append(venueContent);
+    });
+    $destination.append(`<h2>${venues[0].location.city}</h2>`);
+}
+
+const renderForecast = (day) => {
+    const weatherContent = createWeatherHTML(day);
+    $weatherDiv.append(weatherContent);
+};
+
+const executeSearch = () => {
+    $venueDivs.forEach(venue => venue.empty());
+    $weatherDiv.empty();
+    $destination.empty();
+    $container.css("visibility", "visible");
+    getVenues().then(venues => renderVenues(venues));
+    getForecast().then(forecast => renderForecast(forecast));
+    return false;
+}
+
+$submit.click(executeSearch)
